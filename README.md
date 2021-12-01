@@ -1,4 +1,4 @@
-# Test storage options on Kyma Service
+# Test of NFS server with S3 backend
 
 Inspired to combine follow examples to create  NFS server with backend AWS  S3 support 
 
@@ -11,7 +11,9 @@ Source references:
 
 
 
+
 The image is available here to try:
+
 [Dockerhub amacdexp/nfs-server-s3-support](https://hub.docker.com/repository/docker/amacdexp/nfs-server-s3-support)
 
 
@@ -19,6 +21,7 @@ The image is available here to try:
 To see an example of this deployed in Kyma  (Kubernetes)   see:
 
 [amacdexp/kyma-storage-options](https://github.com/amacdexp/kyma-storage-options)
+
 
 
 
