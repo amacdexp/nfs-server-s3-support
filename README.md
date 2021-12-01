@@ -1,67 +1,35 @@
 # Test storage options on Kyma Service
 
-Testing various storage (persistence options) for SAP BTP Kyma Runtime (kubernetes service offering) 
-
-Note: if you testing in BTP trial only a single node kyma cluster is used, so you may be exposed to issues with local node storage.
+Inspired to combine follow examples to create  NFS server with backend AWS  S3 support 
 
 
-Useful links:  
+Source references:
 
-[SAP BTP Kyma Runtime -- Kubernetes service](https://discovery-center.cloud.sap/serviceCatalog/kyma-runtime?region=all) 
+[sjiveson/nfs-server-alpine](https://github.com/sjiveson/nfs-server-alpine/blob/master/Dockerfile) 
 
-[Kyma opensource docs](https://kyma-project.io/) 
-
-[Kubernetes Persistent volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 
+[freegroup/kube-s3](https://github.com/freegroup/kube-s3/blob/master/Dockerfile) 
 
 
 
-WIP
+The image is available here to try:
+[Dockerhub amacdexp/nfs-server-s3-support](https://hub.docker.com/repository/docker/amacdexp/nfs-server-s3-support)
 
 
-## local test of filebrowser 
-(https://filebrowser.org/installation) 
 
+To see an example of this deployed in Kyma  (Kubernetes)   see:
+
+[amacdexp/kyma-storage-options](https://github.com/amacdexp/kyma-storage-options)
+
+
+
+
+## Run in Docker
 ```
-
-export FB_PATH="<LOCATION OF gitclone>/kyma-storage-options"
-mkdir $FB_PATH/srv
-
-echo ''' 
-{
-  "port": 80,
-  "baseURL": "",
-  "address": "",
-  "log": "stdout",
-  "database": "/database.db",
-  "root": "/srv"
-}
-''' > .filebrowser.json
-
-
-touch filebrowser.db
-
-
-docker run \
-    -v $FB_PATH/srv:/srv \
-    -v $FB_PATH/filebrowser.db:/database.db \
-    -v $FB_PATH/.filebrowser.json:/.filebrowser.json \
-    --user $(id -u):$(id -g) \
-    -p 80:80 \
-    filebrowser/filebrowser
-
-
-```
-
-
-## Deploy steps on Kyma
-```
-kubectl apply -n dev -f storage-configmap.yml
-kubectl apply -n dev -f storage-local.yml
-kubectl apply -n dev -f storage-default-pvc.yml
-kubectl apply -n dev -f storage-aws-ebs.yml
-kubectl apply -n dev -f storage-aws-ebs-csi.yml
-kubectl apply -n dev -f storage-pvc.yml
-
-kubectl apply -n dev -f deployment-fb.yml
+docker run -t -i --privileged \
+-e S3_REGION=eu-central-1 \
+-e AWS_KEY='your key here' \
+-e AWS_SECRET_KEY='your secret here' \
+-e S3_BUCKET='your bucket name here. e.g kymastore' \
+amacdexp/nfs-server-s3-support /bin/bash
 
 ```
